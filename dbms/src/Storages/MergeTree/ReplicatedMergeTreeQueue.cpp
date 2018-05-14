@@ -766,20 +766,26 @@ bool ReplicatedMergeTreeQueue::shouldExecuteLogEntry(
 }
 
 
-Int64 ReplicatedMergeTreeQueue::getCurrentMutationVersion(
-    const MergeTreePartInfo & part_info, std::lock_guard<std::mutex> & /* target_state_lock */) const
+Int64 ReplicatedMergeTreeQueue::getCurrentMutationVersionImpl(
+    const String & partition_id, Int64 data_version, std::lock_guard<std::mutex> & /* target_state_lock */) const
 {
-    auto in_partition = mutations_by_partition.find(part_info.partition_id);
+    auto in_partition = mutations_by_partition.find(partition_id);
     if (in_partition == mutations_by_partition.end())
         return 0;
 
-    Int64 data_version = part_info.version ? part_info.version : part_info.min_block;
     auto it = in_partition->second.upper_bound(data_version);
     if (it == in_partition->second.begin())
         return 0;
 
     --it;
     return it->first;
+}
+
+
+Int64 ReplicatedMergeTreeQueue::getCurrentMutationVersion(const String & partition_id, Int64 data_version) const
+{
+    std::lock_guard lock(target_state_mutex);
+    return getCurrentMutationVersionImpl(partition_id, data_version, lock);
 }
 
 
@@ -1233,11 +1239,14 @@ bool ReplicatedMergeTreeMergePredicate::operator()(
         }
     }
 
+    if (left->info.getDataVersion() != right->info.getDataVersion())
     {
         std::lock_guard target_state_lock(queue.target_state_mutex);
 
-        Int64 left_mutation = queue.getCurrentMutationVersion(left->info, target_state_lock);
-        Int64 right_mutation = queue.getCurrentMutationVersion(right->info, target_state_lock);
+        Int64 left_mutation = queue.getCurrentMutationVersionImpl(
+            left->info.partition_id, left->info.getDataVersion(), target_state_lock);
+        Int64 right_mutation = queue.getCurrentMutationVersionImpl(
+            left->info.partition_id, right->info.getDataVersion(), target_state_lock);
         if (left_mutation != right_mutation)
         {
             if (out_reason)
@@ -1266,7 +1275,7 @@ bool ReplicatedMergeTreeMergePredicate::canMutatePart(const MergeTreeData::DataP
     if (in_partition == queue.mutations_by_partition.end())
         return false;
 
-    Int64 current_version = queue.getCurrentMutationVersion(part->info, lock);
+    Int64 current_version = queue.getCurrentMutationVersionImpl(part->info.partition_id, part->info.getDataVersion(), lock);
     Int64 desired_version = in_partition->second.rbegin()->first;
     if (current_version >= desired_version)
         return false;

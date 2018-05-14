@@ -64,6 +64,8 @@ struct MergeTreePartInfo
             || max_block < rhs.min_block;
     }
 
+    Int64 getDataVersion() const { return version ? version : min_block; }
+
     String getPartName() const;
     String getPartNameV0(DayNum_t left_date, DayNum_t right_date) const;
     UInt64 getBlocksCount() const
