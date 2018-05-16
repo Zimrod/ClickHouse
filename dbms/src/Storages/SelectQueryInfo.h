@@ -14,7 +14,8 @@ class Set;
 using SetPtr = std::shared_ptr<Set>;
 
 /// Information about calculated sets in right hand side of IN.
-using PreparedSets = std::unordered_map<IAST*, SetPtr>;
+class StringRange;
+using PreparedSets = std::unordered_map<StringRange, SetPtr, StringRangeHash>;
 
 
 /** Query along with some additional data,
