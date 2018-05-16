@@ -1550,7 +1550,7 @@ void ExpressionAnalyzer::makeSet(const ASTFunction * node, const Block & sample_
     const ASTPtr & arg = args.children.at(1);
 
     /// Already converted.
-    if (prepared_sets.count(arg.get()))
+    if (prepared_sets.count(arg->range))
         return;
 
     /// If the subquery or table name for SELECT.
