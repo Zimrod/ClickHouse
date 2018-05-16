@@ -54,7 +54,8 @@ namespace std {
     {
         size_t operator()(const DB::StringRange & range) const
         {
-            return std::hash(std::tie(range.first, range.second));
+            auto tuple = std::tie(range.first, range.second));
+            return std::hash<decltype(tuple)>()(tuple);
         }
     };
 }
