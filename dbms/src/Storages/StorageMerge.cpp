@@ -93,7 +93,7 @@ namespace
         auto hash = query->getTreeHash();
         auto it = node_hash_to_set.find(hash);
         if (node_hash_to_set.end() != it)
-            new_sets[query.get()] = it->second;
+            new_sets[query->range] = it->second;
 
         for (const auto & child : query->children)
             relinkSetsImpl(child, node_hash_to_set, new_sets);
