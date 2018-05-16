@@ -52,9 +52,9 @@ inline String toString(const StringRange & range)
 namespace std {
     template <> struct hash<DB::StringRange>
     {
-        size_t operator()(const DB::StringRange & x) const
+        size_t operator()(const DB::StringRange & range) const
         {
-            return std::hash(std::tie(first, second));
+            return std::hash(std::tie(range.first, range.second));
         }
     };
 }
