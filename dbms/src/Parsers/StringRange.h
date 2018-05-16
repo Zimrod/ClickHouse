@@ -4,6 +4,7 @@
 #include <Parsers/TokenIterator.h>
 #include <map>
 #include <memory>
+#include <Common/SipHash.h>
 
 
 namespace DB
@@ -46,16 +47,16 @@ inline String toString(const StringRange & range)
     return range.first ? String(range.first, range.second) : String();
 }
 
-}
-
-
-namespace std {
-    template <> struct hash<DB::StringRange>
+struct StringRangeHash
+{
+    UInt64 operator()(const DB::StringRange & range) const
     {
-        size_t operator()(const DB::StringRange & range) const
-        {
-            auto tuple = std::tie(range.first, range.second));
-            return std::hash<decltype(tuple)>()(tuple);
-        }
-    };
-}
+        SipHash hash;
+        hash.update(range.first);
+        hash.update(range.second);
+        return hash.get64();
+    }
+};
+
+};
+
