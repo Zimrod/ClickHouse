@@ -1515,7 +1515,7 @@ void ExpressionAnalyzer::makeSetsForIndexImpl(const ASTPtr & node, const Block &
         {
             const ASTPtr & arg = args.children.at(1);
 
-            if (!prepared_sets.count(arg.get())) /// Not already prepared.
+            if (!prepared_sets.count(arg->range)) /// Not already prepared.
             {
                 if (typeid_cast<ASTSubquery *>(arg.get()) || typeid_cast<ASTIdentifier *>(arg.get()))
                 {
