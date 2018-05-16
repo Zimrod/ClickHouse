@@ -15,9 +15,10 @@ struct StringRange
     const char * first = nullptr;
     const char * second = nullptr;
 
-    StringRange() {}
+    StringRange() = default;
     StringRange(const char * begin, const char * end) : first(begin), second(end) {}
-    StringRange(TokenIterator token) : first(token->begin), second(token->end) {}
+    explicit StringRange(TokenIterator token) : first(token->begin), second(token->end) {}
+    StringRange(const StringRange & other) = default;
 
     StringRange(TokenIterator token_begin, TokenIterator token_end)
     {
