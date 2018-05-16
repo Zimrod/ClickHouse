@@ -3,9 +3,9 @@
 #include <Interpreters/AggregateDescription.h>
 #include <Interpreters/Settings.h>
 #include <Core/Block.h>
-#include "ExpressionActions.h"
-#include "ProjectionManipulation.h"
-
+#include <Interpreters/ExpressionActions.h>
+#include <Interpreters/ProjectionManipulation.h>
+#include <Parsers/StringRange.h>
 
 namespace DB
 {
