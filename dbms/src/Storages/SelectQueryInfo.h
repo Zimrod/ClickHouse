@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <unordered_map>
-
+#include <Parsers/StringRange.h>
 
 namespace DB
 {
@@ -14,8 +14,6 @@ class Set;
 using SetPtr = std::shared_ptr<Set>;
 
 /// Information about calculated sets in right hand side of IN.
-struct StringRange;
-struct StringRangeHash;
 using PreparedSets = std::unordered_map<StringRange, SetPtr, StringRangeHash>;
 
 
