@@ -1016,7 +1016,7 @@ bool KeyCondition::mayBeTrueInRangeImpl(const std::vector<Range> & key_ranges, c
         {
             auto in_func = typeid_cast<const ASTFunction *>(element.in_function.get());
             const ASTs & args = typeid_cast<const ASTExpressionList &>(*in_func->arguments).children;
-            PreparedSets::const_iterator it = prepared_sets.find(args[1].get());
+            PreparedSets::const_iterator it = prepared_sets.find(args[1]->range);
             if (in_func && it != prepared_sets.end())
             {
                 rpn_stack.emplace_back(element.set_index->mayBeTrueInRange(key_ranges, data_types));

@@ -34,6 +34,8 @@ struct StringRange
         first = token_begin->begin;
         second = token_last->end;
     }
+
+    bool operator==(const StringRange & rhs) const { return std::tie(first, second) == std::tie(rhs.first, rhs.second); }
 };
 
 using StringPtr = std::shared_ptr<String>;
@@ -44,4 +46,15 @@ inline String toString(const StringRange & range)
     return range.first ? String(range.first, range.second) : String();
 }
 
+}
+
+
+namespace std {
+    template <> struct hash<DB::StringRange>
+    {
+        size_t operator()(const DB::StringRange & x) const
+        {
+            return std::hash(std::tie(first, second));
+        }
+    };
 }

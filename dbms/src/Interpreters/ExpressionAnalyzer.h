@@ -23,7 +23,8 @@ using ASTPtr = std::shared_ptr<IAST>;
 
 class Set;
 using SetPtr = std::shared_ptr<Set>;
-using PreparedSets = std::unordered_map<IAST*, SetPtr>;
+class StringRange;
+using PreparedSets = std::unordered_map<StringRange, SetPtr>;
 
 class IBlockInputStream;
 using BlockInputStreamPtr = std::shared_ptr<IBlockInputStream>;
