@@ -16,9 +16,9 @@ struct StringRange
     const char * second = nullptr;
 
     StringRange() = default;
+    StringRange(const StringRange & other) = default;
     StringRange(const char * begin, const char * end) : first(begin), second(end) {}
     explicit StringRange(TokenIterator token) : first(token->begin), second(token->end) {}
-    StringRange(const StringRange & other) = default;
 
     StringRange(TokenIterator token_begin, TokenIterator token_end)
     {
@@ -50,7 +50,7 @@ inline String toString(const StringRange & range)
 
 struct StringRangeHash
 {
-    UInt64 operator()(const DB::StringRange & range) const
+    size_t operator()(const DB::StringRange & range) const
     {
         SipHash hash;
         hash.update(range.first);
