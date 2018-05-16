@@ -50,7 +50,7 @@ inline String toString(const StringRange & range)
 
 struct StringRangeHash
 {
-    size_t operator()(const DB::StringRange & range) const
+    UInt64 operator()(const StringRange & range) const
     {
         SipHash hash;
         hash.update(range.first);
@@ -59,5 +59,5 @@ struct StringRangeHash
     }
 };
 
-};
+}
 
