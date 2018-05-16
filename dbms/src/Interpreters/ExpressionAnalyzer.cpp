@@ -2102,7 +2102,7 @@ void ExpressionAnalyzer::getActionsImpl(const ASTPtr & ast, bool no_subqueries, 
                 /// Select the name in the next cycle.
                 argument_names.emplace_back();
             }
-            else if (prepared_sets.count(child.get()) && functionIsInOrGlobalInOperator(node->name) && arg == 1)
+            else if (prepared_sets.count(child->range) && functionIsInOrGlobalInOperator(node->name) && arg == 1)
             {
                 ColumnWithTypeAndName column;
                 column.type = std::make_shared<DataTypeSet>();
